@@ -1,0 +1,53 @@
+sleep_app.py
+
+import streamlit as st
+import pandas as pd
+import joblib
+
+# Load your trained model
+model = joblib.load('model.pkl')  # model.pkl must be in same folder
+
+st.title("Sleep Disorder Prediction Tool")
+st.markdown("Enter your details to predict potential sleep disorders.")
+
+# User inputs
+gender = st.selectbox("Gender", ["Male", "Female"])
+age = st.slider("Age", 18, 80, 30)
+bmi_category = st.selectbox("BMI Category", ["Normal", "Overweight", "Obese"])
+sleep_duration = st.slider("Sleep Duration (hours)", 0.0, 12.0, 7.0)
+quality_sleep = st.slider("Quality of Sleep (1–10)", 1, 10, 6)
+physical_activity = st.slider("Physical Activity Level (1–10)", 0, 10, 5)
+stress_level = st.slider("Stress Level (1–10)", 1, 10, 6)
+heart_rate = st.slider("Heart Rate (bpm)", 40, 150, 70)
+systolic = st.slider("Systolic BP", 90, 200, 120)
+diastolic = st.slider("Diastolic BP", 60, 140, 80)
+occupation = st.selectbox("Occupation", ["Nurse", "Doctor", "Engineer", "Teacher", "Salesperson", "Accountant", "Lawyer", "Others"])
+
+# Collect inputs
+input_df = pd.DataFrame({
+    'Gender': [gender],
+    'Age': [age],
+    'BMI Category': [bmi_category],
+    'Sleep Duration': [sleep_duration],
+    'Quality of Sleep': [quality_sleep],
+    'Physical Activity Level': [physical_activity],
+    'Stress Level': [stress_level],
+    'Heart Rate': [heart_rate],
+    'Systolic': [systolic],
+    'Diastolic': [diastolic],
+    'Occupation': [occupation]
+})
+
+# TODO: Apply same preprocessing as training (optional)
+
+if st.button("Predict Sleep Disorder"):
+    result = model.predict(input_df)[0]
+    st.success(f"Prediction: {result}")
+
+    if result == "Insomnia":
+        st.info("Recommendation: Improve your sleep routine, reduce screen time.")
+    elif result == "Sleep Apnea":
+        st.warning("Recommendation: Consult a sleep specialist.")
+    else:
+        st.balloons()
+        st.success("You're likely not experiencing a sleep disorder.")
