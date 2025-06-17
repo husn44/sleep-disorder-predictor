@@ -1,4 +1,6 @@
 #sleep_app.py
+import os
+os.system("pip show joblib")
 
 import streamlit as st
 import pandas as pd
